@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>ميمز عربي 😂 اعمل ميم في ١٠ ثواني</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0B1023;--card:rgba(255,255,255,.055);--border:rgba(255,255,255,.10);--cyan:#22D3EE;--violet:#8B5CF6;--pink:#F472B6;--txt:#E7ECF5;--mut:#8B93A7}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:radial-gradient(1200px 600px at 80% -10%,rgba(139,92,246,.18),transparent),radial-gradient(900px 500px at 10% 110%,rgba(34,211,238,.12),transparent),var(--bg);color:var(--txt);min-height:100vh;padding-bottom:40px}
+.wrap{max-width:480px;margin:0 auto;padding:16px}
+header{text-align:center;padding:18px 0 8px}
+h1{font-size:28px;font-weight:900;background:linear-gradient(90deg,var(--cyan),var(--violet),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mut);font-size:13px;margin-top:2px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:14px;margin-top:14px}
+.sec{font-size:14px;font-weight:800;margin-bottom:10px}
+.tpls{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.tpls::-webkit-scrollbar{display:none}
+.tpl{flex:0 0 86px;height:86px;border-radius:14px;border:2px solid transparent;cursor:pointer;overflow:hidden;background:#151C38;position:relative}
+.tpl.on{border-color:var(--cyan)}
+.tpl canvas,.tpl img{width:100%;height:100%;object-fit:cover;display:block}
+.up{flex:0 0 86px;height:86px;border-radius:14px;border:2px dashed rgba(255,255,255,.25);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:var(--mut);font-size:11px;gap:4px}
+#stage{position:relative;border-radius:14px;overflow:hidden;background:#000;margin-top:6px}
+#cv{width:100%;display:block;touch-action:none}
+input[type=text],textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:12px;padding:11px 14px;color:var(--txt);font-size:15px;font-weight:700;text-align:center;outline:none}
+input[type=text]:focus{border-color:var(--cyan)}
+.row{display:flex;gap:8px;margin-top:8px}
+.row>*{flex:1}
+.btn{border:none;cursor:pointer;border-radius:13px;padding:12px;font-size:14px;font-weight:800;font-family:'Cairo';color:var(--txt);background:rgba(255,255,255,.08);border:1px solid var(--border);transition:transform .08s}
+.btn:active{transform:scale(.96)}
+.btn.g{background:linear-gradient(90deg,var(--cyan),var(--violet));color:#04121A;border:none}
+.btn.wa{background:#1FA855;border:none}
+.btn.rec{background:linear-gradient(90deg,#EF4444,#F472B6);border:none}
+.btn:disabled{opacity:.45}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:7px 13px;border-radius:20px;font-size:12px;background:rgba(255,255,255,.07);border:1px solid var(--border);cursor:pointer;font-weight:700}
+.chip.on{background:linear-gradient(90deg,var(--cyan),var(--violet));color:#04121A;border:none}
+label.sl{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--mut);margin-top:10px}
+input[type=range]{flex:1;accent-color:var(--cyan)}
+#recState{display:none;text-align:center;font-size:13px;color:#F87171;font-weight:800;margin-top:8px}
+#recState.show{display:block;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.35}}
+.note{font-size:11px;color:var(--mut);text-align:center;margin-top:10px;line-height:1.7}
+#vidOut{width:100%;border-radius:12px;margin-top:10px;display:none}
+footer{text-align:center;color:var(--mut);font-size:11px;margin-top:22px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><h1>ميمز عربي 😂</h1><div class="sub">اختار قالب، اكتب نكتتك، شارك. من غير تسجيل ولا وجع دماغ</div></header>
+
+<div class="card">
+  <div class="sec">١) اختار قالب أو ارفع صورتك</div>
+  <div class="tpls" id="tpls"></div>
+</div>
+
+<div class="card">
+  <div class="sec">٢) اكتب النص (اسحبه على الصورة لأي مكان)</div>
+  <div id="stage"><canvas id="cv" width="800" height="800"></canvas></div>
+  <div class="row">
+    <input type="text" id="topTxt" placeholder="النص اللي فوق…">
+    <input type="text" id="botTxt" placeholder="النص اللي تحت…">
+  </div>
+  <label class="sl">حجم الخط <input type="range" id="fsz" min="28" max="110" value="56"></label>
+  <div class="chips" style="margin-top:10px">
+    <div class="chip on" data-c="white">أبيض</div>
+    <div class="chip" data-c="yellow">أصفر</div>
+    <div class="chip" data-c="cyan">سماوي</div>
+    <div class="chip" data-c="pink">بينك</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="sec">٣) سجّل تعليقك الصوتي وطلّع فيديو 🎬</div>
+  <div class="row">
+    <button class="btn rec" id="recBtn">🎙 ابدأ التسجيل</button>
+  </div>
+  <div id="recState">● بيسجل… الصورة بتهتز سينمائي، اتكلم براحتك</div>
+  <video id="vidOut" controls playsinline></video>
+  <div class="note">الفيديو بيطلع بصيغة webm على جهازك، فيه زوم سينمائي على الصورة + صوتك</div>
+</div>
+
+<div class="card">
+  <div class="sec">٤) شارك</div>
+  <div class="row">
+    <button class="btn g" id="dlImg">⬇ حمّل الصورة</button>
+    <button class="btn wa" id="shareImg">🟢 واتساب</button>
+  </div>
+  <div class="row">
+    <button class="btn" id="dlVid">⬇ حمّل الفيديو</button>
+    <button class="btn" id="shareAny">📤 مشاركة</button>
+  </div>
+</div>
+
+<footer>معمول بحب وضحك • ميمز عربي • مفيش داتا بتترفع، كل حاجة على جهازك</footer>
+</div>
+<input type="file" id="file" accept="image/*" hidden>
+
+<script>
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+const COLORS={white:'#FFFFFF',yellow:'#FDE047',cyan:'#22D3EE',pink:'#F472B6'};
+let color='white',fontSize=56;
+let img=new Image(),imgReady=false;
+let topPos={x:400,y:110},botPos={x:400,y:690};
+let drag=null,lastVidBlob=null,lastVidURL=null;
+
+// ===== built-in meme templates (vector faces, render everywhere) =====
+const TPLS=[
+ {bg:'#FFD23F',skin:'#FFF3D6',eyes:'happy',mouth:'grin',extra:'tear'},
+ {bg:'#3B82F6',skin:'#E8E8E8',eyes:'xx',mouth:'deadpan',extra:''},
+ {bg:'#10B981',skin:'#FFE9C9',eyes:'round',mouth:'biggrin',extra:'blush'},
+ {bg:'#F472B6',skin:'#FFE9C9',eyes:'sad',mouth:'sad',extra:'blush'},
+ {bg:'#8B5CF6',skin:'#FFE9C9',eyes:'angry',mouth:'angry',extra:'steam'},
+ {bg:'#F97316',skin:'#FFE9C9',eyes:'think',mouth:'hmm',extra:''},
+ {bg:'#EF4444',skin:'#FFD9B0',eyes:'angry2',mouth:'yell',extra:''},
+ {bg:'#22D3EE',skin:'#FFE9C9',eyes:'cool',mouth:'smirk',extra:''},
+];
+function drawFace(x,cx,cy,r,t){
+ x.save();x.strokeStyle='#1A1A2E';x.lineCap='round';
+ // head
+ x.fillStyle=t.skin;x.beginPath();x.arc(cx,cy,r,0,7);x.fill();x.lineWidth=r*.07;x.stroke();
+ const ey=cy-r*.28,ex=r*.42,er=r*.16;
+ x.fillStyle='#1A1A2E';
+ const eye=(sx,sy,kind)=>{
+  if(kind==='round'){x.beginPath();x.arc(sx,sy,er,0,7);x.fill();x.fillStyle='#fff';x.beginPath();x.arc(sx-er*.3,sy-er*.3,er*.35,0,7);x.fill();x.fillStyle='#1A1A2E'}
+  else if(kind==='xx'){x.lineWidth=r*.09;x.beginPath();x.moveTo(sx-er,sy-er);x.lineTo(sx+er,sy+er);x.moveTo(sx+er,sy-er);x.lineTo(sx-er,sy+er);x.stroke()}
+  else if(kind==='happy'){x.lineWidth=r*.09;x.beginPath();x.arc(sx,sy+er*.6,er,Math.PI*1.15,Math.PI*1.85);x.stroke()}
+  else if(kind==='sad'){x.beginPath();x.arc(sx,sy,er*.75,0,7);x.fill();x.lineWidth=r*.07;x.beginPath();x.moveTo(sx-er*1.4,sy-er*1.8);x.lineTo(sx+er*.9,sy-er*1.1);x.stroke()}
+  else if(kind==='angry'||kind==='angry2'){x.beginPath();x.arc(sx,sy+er*.3,er*.8,0,7);x.fill();x.lineWidth=r*.09;x.beginPath();x.moveTo(sx-er*1.5,sy-er*(kind==='angry'?1.9:2.2));x.lineTo(sx+er*1.1,sy-er*.9);x.stroke()}
+  else if(kind==='think'){x.lineWidth=r*.09;x.beginPath();x.moveTo(sx-er,sy-er*.4);x.lineTo(sx+er,sy-er*.7);x.stroke();x.beginPath();x.arc(sx,sy+er*.5,er*.7,0,7);x.fill()}
+  else if(kind==='cool'){x.fillRect(sx-er*1.3,sy-er*.7,er*2.6,er*1.3);x.strokeRect(sx-er*1.3,sy-er*.7,er*2.6,er*1.3)}
+ };
+ eye(cx-ex,ey,t.eyes);eye(cx+ex,ey,t.eyes);
+ if(t.eyes==='cool'){x.fillRect(cx-er*.55,ey-er*.55,er*1.1,er*.35)}
+ // mouth
+ const my=cy+r*.42;x.lineWidth=r*.09;
+ if(t.mouth==='grin'){x.beginPath();x.arc(cx,my-r*.35,r*.38,.15*Math.PI,.85*Math.PI);x.stroke()}
+ else if(t.mouth==='biggrin'){x.fillStyle='#1A1A2E';x.beginPath();x.arc(cx,my-r*.3,r*.42,.05*Math.PI,.95*Math.PI);x.closePath();x.fill();x.fillStyle='#F87171';x.beginPath();x.arc(cx,my+r*.05,r*.2,.1*Math.PI,.9*Math.PI);x.fill()}
+ else if(t.mouth==='deadpan'){x.beginPath();x.moveTo(cx-r*.3,my);x.lineTo(cx+r*.3,my);x.stroke()}
+ else if(t.mouth==='sad'){x.beginPath();x.arc(cx,my+r*.35,r*.3,1.15*Math.PI,1.85*Math.PI);x.stroke()}
+ else if(t.mouth==='angry'){x.beginPath();x.arc(cx,my+r*.4,r*.32,1.1*Math.PI,1.9*Math.PI);x.stroke()}
+ else if(t.mouth==='yell'){x.fillStyle='#1A1A2E';x.beginPath();x.ellipse(cx,my,r*.3,r*.38,0,0,7);x.fill();x.fillStyle='#F87171';x.beginPath();x.ellipse(cx,my+r*.15,r*.18,r*.16,0,0,7);x.fill()}
+ else if(t.mouth==='hmm'){x.beginPath();x.moveTo(cx-r*.25,my+r*.05);x.quadraticCurveTo(cx,my-r*.12,cx+r*.25,my+r*.02);x.stroke()}
+ else if(t.mouth==='smirk'){x.beginPath();x.moveTo(cx-r*.28,my);x.quadraticCurveTo(cx+r*.1,my+r*.15,cx+r*.34,my-r*.1);x.stroke()}
+ // extras
+ if(t.extra==='tear'){x.fillStyle='#7DD3FC';x.beginPath();x.moveTo(cx+r*.95,cy-r*.5);x.quadraticCurveTo(cx+r*.75,cy-r*.05,cx+r*.95,cy);x.quadraticCurveTo(cx+r*1.15,cy-r*.05,cx+r*.95,cy-r*.5);x.fill()}
+ if(t.extra==='blush'){x.fillStyle='rgba(244,114,182,.45)';x.beginPath();x.ellipse(cx-r*.62,cy+r*.18,r*.16,r*.1,0,0,7);x.fill();x.beginPath();x.ellipse(cx+r*.62,cy+r*.18,r*.16,r*.1,0,0,7);x.fill()}
+ if(t.extra==='steam'){x.strokeStyle='rgba(255,255,255,.8)';x.lineWidth=r*.06;[-1,1].forEach(s=>{x.beginPath();x.moveTo(cx+s*r*.55,cy-r*1.05);x.quadraticCurveTo(cx+s*r*.7,cy-r*1.3,cx+s*r*.5,cy-r*1.5);x.stroke()})}
+ x.restore();
+}
+function makeTpl(t){const c=document.createElement('canvas');c.width=c.height=400;const x=c.getContext('2d');
+ x.fillStyle=t.bg;x.fillRect(0,0,400,400);
+ const g=x.createRadialGradient(200,160,40,200,200,300);g.addColorStop(0,'rgba(255,255,255,.22)');g.addColorStop(1,'rgba(0,0,0,.22)');x.fillStyle=g;x.fillRect(0,0,400,400);
+ drawFace(x,200,205,115,t);
+ return c;}
+const strip=document.getElementById('tpls');
+TPLS.forEach((t,i)=>{const c=makeTpl(t);const d=document.createElement('div');d.className='tpl'+(i==0?' on':'');d.appendChild(c.cloneNode?c:c);const im=new Image();im.src=c.toDataURL();d.innerHTML='';d.appendChild(im);d.onclick=()=>{document.querySelectorAll('.tpl').forEach(e=>e.classList.remove('on'));d.classList.add('on');setImage(c)};strip.appendChild(d)});
+const up=document.createElement('div');up.className='up';up.innerHTML='📷<span>ارفع صورة</span>';up.onclick=()=>document.getElementById('file').click();strip.appendChild(up);
+document.getElementById('file').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{const im=new Image();im.onload=()=>{setImage(im)};im.src=ev.target.result};r.readAsDataURL(f)};
+
+function setImage(source){img=source;imgReady=true;draw()}
+function draw(){ctx.fillStyle='#000';ctx.fillRect(0,0,800,800);
+ if(imgReady){const iw=img.width,ih=img.height,s=Math.max(800/iw,800/ih),w=iw*s,h=ih*s;ctx.drawImage(img,(800-w)/2,(800-h)/2,w,h)}
+ drawText(document.getElementById('topTxt').value,topPos.x,topPos.y);
+ drawText(document.getElementById('botTxt').value,botPos.x,botPos.y);}
+function drawText(t,x,y){if(!t)return;ctx.font='900 '+fontSize+'px Cairo, sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+ const words=t.split(' ');const lines=[];let line='';
+ words.forEach(w=>{const test=line?line+' '+w:w;if(ctx.measureText(test).width>730&&line){lines.push(line);line=w}else line=test});lines.push(line);
+ const lh=fontSize*1.25;const start=y-(lines.length-1)*lh/2;
+ lines.forEach((l,i)=>{ctx.lineWidth=Math.max(6,fontSize/7);ctx.strokeStyle='#000';ctx.lineJoin='round';ctx.strokeText(l,x,start+i*lh);ctx.fillStyle=COLORS[color];ctx.fillText(l,x,start+i*lh)})}
+document.getElementById('topTxt').oninput=draw;
+document.getElementById('botTxt').oninput=draw;
+document.getElementById('fsz').oninput=e=>{fontSize=+e.target.value;draw()};
+document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{document.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');color=c.dataset.c;draw()});
+
+// drag text
+function pos(e){const r=cv.getBoundingClientRect();const p=e.touches?e.touches[0]:e;return{x:(p.clientX-r.left)*800/r.width,y:(p.clientY-r.top)*800/r.height}}
+function hit(p,t){return Math.abs(p.x-t.x)<220&&Math.abs(p.y-t.y)<70}
+cv.addEventListener('pointerdown',e=>{const p=pos(e);if(hit(p,topPos))drag='top';else if(hit(p,botPos))drag='bot'});
+cv.addEventListener('pointermove',e=>{if(!drag)return;const p=pos(e);if(drag==='top'){topPos.x=p.x;topPos.y=p.y}else{botPos.x=p.x;botPos.y=p.y}draw();e.preventDefault()});
+cv.addEventListener('pointerup',()=>drag=null);
+cv.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
+
+// ===== voice-over video (Ken Burns + mic → webm) =====
+let recording=false,recAnim=null;
+const recBtn=document.getElementById('recBtn'),recState=document.getElementById('recState');
+recBtn.onclick=async()=>{
+ if(recording)return;
+ try{
+  const mic=await navigator.mediaDevices.getUserMedia({audio:true});
+  recording=true;recState.classList.add('show');recBtn.disabled=true;
+  const stream=cv.captureStream(30);
+  const mixed=new MediaStream([...stream.getVideoTracks(),...mic.getAudioTracks()]);
+  const rec=new MediaRecorder(mixed,{mimeType:MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')?'video/webm;codecs=vp9,opus':'video/webm'});
+  const chunks=[];rec.ondataavailable=e=>chunks.push(e.data);
+  const dur=15000;const t0=performance.now();
+  (function anim(){if(!recording)return;const t=(performance.now()-t0)/1000;
+   const z=1+0.12*Math.min(t/dur*1,1)+0.015*Math.sin(t*1.4);
+   const panX=Math.sin(t*0.6)*14,panY=Math.cos(t*0.5)*10;
+   ctx.save();ctx.translate(400+panX,400+panY);ctx.scale(z,z);ctx.translate(-400,-400);
+   ctx.fillStyle='#000';ctx.fillRect(-50,-50,900,900);
+   if(imgReady){const iw=img.width,ih=img.height,s=Math.max(800/iw,800/ih),w=iw*s,h=ih*s;ctx.drawImage(img,(800-w)/2,(800-h)/2,w,h)}
+   drawText(document.getElementById('topTxt').value,topPos.x,topPos.y);
+   drawText(document.getElementById('botTxt').value,botPos.x,botPos.y);
+   ctx.restore();
+   recAnim=requestAnimationFrame(anim)})();
+  rec.start(250);
+  setTimeout(()=>{rec.stop();recording=false;cancelAnimationFrame(recAnim);recState.classList.remove('show');recBtn.disabled=false;draw()},dur);
+  rec.onstop=()=>{mic.getTracks().forEach(t=>t.stop());
+   lastVidBlob=new Blob(chunks,{type:'video/webm'});
+   if(lastVidURL)URL.revokeObjectURL(lastVidURL);
+   lastVidURL=URL.createObjectURL(lastVidBlob);
+   const v=document.getElementById('vidOut');v.src=lastVidURL;v.style.display='block';}
+ }catch(err){alert('الميكروفون مش متاح — اسمح للموقع يستخدم الميك');recording=false;recState.classList.remove('show');recBtn.disabled=false;}
+};
+
+// ===== share & download =====
+function dl(url,name){const a=document.createElement('a');a.href=url;a.download=name;a.click()}
+document.getElementById('dlImg').onclick=()=>dl(cv.toDataURL('image/png'),'meme.png');
+document.getElementById('dlVid').onclick=()=>{if(lastVidURL)dl(lastVidURL,'meme-video.webm');else alert('سجّل فيديو الأول من زرار الميك')};
+document.getElementById('shareImg').onclick=async()=>{
+ try{const b=await new Promise(r=>cv.toBlob(r,'image/png'));const f=new File([b],'meme.png',{type:'image/png'});
+  if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'ميم'})}
+  else{dl(cv.toDataURL('image/png'),'meme.png');window.open('https://wa.me/?text='+encodeURIComponent('اتفرج على الميم اللي عملته 😂 حمّلته على جهازك، ابعتهولي'),'_blank')}
+ }catch(e){}};
+document.getElementById('shareAny').onclick=async()=>{
+ try{if(lastVidBlob){const f=new File([lastVidBlob],'meme.webm',{type:'video/webm'});
+   if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f]});return}}
+  const b=await new Promise(r=>cv.toBlob(r,'image/png'));const f2=new File([b],'meme.png',{type:'image/png'});
+  if(navigator.canShare&&navigator.canShare({files:[f2]})){await navigator.share({files:[f2]})}else alert('حمّل الصورة أو الفيديو وشاركها من معرض الصور')
+ }catch(e){}};
+
+setImage(makeTpl(TPLS[0]));
+</script>
+</body>
+</html>
